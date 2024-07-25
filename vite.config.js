@@ -11,4 +11,13 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    server: {
+        host: true, // Needed for the Docker Container port mapping
+        hmr: {
+            host: 'localhost', // Define the host for the Hot Module Replacement.
+        },
+        watch: {
+            usePolling: true, // Use polling to detect changeS.
+        },
+    }
 });

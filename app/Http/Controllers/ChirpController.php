@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chirp;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class ChirpController extends Controller
@@ -57,19 +58,40 @@ class ChirpController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing a specified chirp.
+     *
+     * @param Chirp $chirp
+     *
+     * @return View
      */
-    public function edit(Chirp $chirp)
+    public function edit(Chirp $chirp): View
     {
-        //
+        Gate::authorize('update', $chirp);
+
+        return view('chirps.edit', [
+            'chirp' => $chirp,
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified chirp in storage.
+     *
+     * @param Request $request
+     * @param Chirp $chirp
+     *
+     * @return RedirectResponse
      */
-    public function update(Request $request, Chirp $chirp)
+    public function update(Request $request, Chirp $chirp): RedirectResponse
     {
-        //
+        Gate::authorize('update', $chirp);
+
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+
+        $chirp->update($validated);
+
+        return redirect(route('chirps.index'));
     }
 
     /**

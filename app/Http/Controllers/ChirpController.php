@@ -10,11 +10,15 @@ use Illuminate\View\View;
 class ChirpController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource chirp.
+     *
+     * @return View
      */
     public function index(): View
     {
-        return view('chirps.index');
+        return view('chirps.index', [
+            'chirps' => Chirp::with('user')->latest()->get(),
+        ]);
     }
 
     /**
@@ -27,6 +31,11 @@ class ChirpController extends Controller
 
     /**
      * Store a newly created chirp in storage.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     *
      */
     public function store(Request $request): RedirectResponse
     {
